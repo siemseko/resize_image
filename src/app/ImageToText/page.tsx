@@ -32,7 +32,8 @@ export default function ImageToText() {
       });
       setText(result.data.text);
     } catch (err) {
-      setError('❌ Failed to extract text. Please try another image.');
+      console.error(err);
+      setError('Failed to extract text. Please try another image.');
     }
 
     setLoading(false);
