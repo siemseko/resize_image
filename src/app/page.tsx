@@ -1,10 +1,19 @@
 'use client';
 
-import LoginPage from "./login/page";
+import { useEffect } from 'react';
 
- 
-export default function HomePage() {  
-  return (
-    <LoginPage/>
-  );
+import { useRouter } from 'src/routes/hooks';
+
+import { CONFIG } from 'src/config-global';
+
+// ----------------------------------------------------------------------
+
+export default function Page() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push(CONFIG.auth.redirectPath);
+  }, [router]);
+
+  return null;
 }
