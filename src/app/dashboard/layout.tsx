@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [router]);
 
-  if (loading) return <div className="p-6 text-center">Checking authentication...</div>;
+  if (loading) return <div className="p-6 text-center">Checking authentications...</div>;
 
   return <>{children}</>;
 }
