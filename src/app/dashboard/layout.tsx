@@ -42,7 +42,7 @@ export default function Layout({ children }: Props) {
     return <LoadingScreen />;
   }
 
-  // You can add the AuthGuard back if needed in the futuredf
+  // You can add the AuthGuard back if needed in the futuredfdf
   return (
     <DashboardLayout>{children}</DashboardLayout>
   );
