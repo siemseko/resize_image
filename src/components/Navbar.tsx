@@ -4,8 +4,8 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
 const navItems = [
-  { name: 'Home', href: '/' },
-  { name: 'ImageToText', href: '/ImageToText' },
+  { name: 'Home', href: '/dashboard' },
+  { name: 'ImageToText', href: '/dashboard/ImageToText' },
 //   { name: 'Services', href: '/services' },
 //   { name: 'Contact', href: '/contact' },
 ];

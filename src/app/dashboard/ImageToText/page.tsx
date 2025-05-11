@@ -1,7 +1,7 @@
 'use client';
 
 import Navbar from '@/components/Navbar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Tesseract from 'tesseract.js';
 import { CloudArrowUpIcon } from '@heroicons/react/24/solid';
 
@@ -39,6 +39,30 @@ export default function ImageToText() {
     setLoading(false);
   };
 
+  // ✅ Handle Ctrl+V paste image
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (items) {
+        for (const item of items) {
+          if (item.type.startsWith('image/')) {
+            const file = item.getAsFile();
+            if (file) {
+              setImage(file);
+              setText('');
+              setError('');
+            }
+          }
+        }
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => {
+      window.removeEventListener('paste', handlePaste);
+    };
+  }, []);
+
   return (
     <div className="max-w-xl mx-auto p-6 space-y-6">
       <Navbar />
@@ -59,6 +83,7 @@ export default function ImageToText() {
             onChange={handleFileChange}
           />
         </label>
+        <p className="text-sm text-gray-500 mt-2">Or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste an image</p>
       </div>
 
       {/* Preview */}
@@ -95,6 +120,17 @@ export default function ImageToText() {
           {error}
         </div>
       )}
+
+      <button
+  onClick={() => {
+    localStorage.removeItem('auth');
+    location.href = '/login';
+  }}
+  className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
+>
+  Logout
+</button>
+
     </div>
   );
 }
