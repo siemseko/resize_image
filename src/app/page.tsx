@@ -3,6 +3,7 @@ import { useState } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { ArrowDownTrayIcon, CloudArrowUpIcon } from '@heroicons/react/24/solid';
+import Navbar from '@/components/Navbar';
 
 export default function HomePage() {
   const [files, setFiles] = useState<File[]>([]);
@@ -83,6 +84,7 @@ export default function HomePage() {
 
   return (
     <div className="max-w-xl mx-auto p-6 space-y-6">
+      <Navbar/>
       <h1 className="text-2xl font-bold">Resize Images to 1280x720 (Client-Side)</h1>
 
       {/* Resize mode selector */}
