@@ -124,7 +124,7 @@ export default function ImageToText() {
       <button
         onClick={() => {
           localStorage.removeItem('auth');
-          location.href = '/';
+          location.href = '/resize_image/login';
         }}
         className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
       >
