@@ -122,14 +122,14 @@ export default function ImageToText() {
       )}
 
       <button
-  onClick={() => {
-    localStorage.removeItem('auth');
-    location.href = '/login';
-  }}
-  className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
->
-  Logout
-</button>
+        onClick={() => {
+          localStorage.removeItem('auth');
+          location.href = '/';
+        }}
+        className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
+      >
+        Logout
+      </button>
 
     </div>
   );
