@@ -90,13 +90,13 @@ export default function HomePage() {
         <label className="font-medium">Resize Mode:</label>
         <button
           onClick={() => setResizeMode('fill')}
-          className={`px-3 py-1 rounded ${resizeMode === 'fill' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
+          className={`cursor-pointer px-3 py-1 rounded ${resizeMode === 'fill' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
         >
           Fill
         </button>
         <button
           onClick={() => setResizeMode('cover')}
-          className={`px-3 py-1 rounded ${resizeMode === 'cover' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
+          className={`cursor-pointer px-3 py-1 rounded ${resizeMode === 'cover' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
         >
           Cover
         </button>
