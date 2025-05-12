@@ -37,47 +37,54 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-sm mx-auto mt-20 p-6 border rounded shadow">
-      <h1 className="text-2xl font-bold text-center mb-4">Login</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 border rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <div className="relative">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="max-w-sm w-full p-6 bg-[#f2f5f9]">
+        <h1 className="text-2xl font-bold text-center mb-4 font-kantumruy">
+          ចូលប្រើប្រព័ន្ធ
+        </h1>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password"
-            className="w-full p-2 border rounded"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type="email"
+            placeholder="Email"
+            className="w-full p-2 border"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Password"
+              className="w-full p-2 border"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="absolute right-2 top-2 text-gray-500 items-center"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <EyeIcon className="h-5 w-5 cursor-pointer" />
+              ) : (
+
+                <EyeSlashIcon className="h-5 w-5 cursor-pointer" />
+              )}
+            </button>
+          </div>
           <button
-            type="button"
-            className="absolute right-2 top-2 text-gray-500"
-            onClick={() => setShowPassword(!showPassword)}
+            type="submit"
+            className={`w-full py-2 cursor-pointer ${loading ? 'bg-[#f2f5f9]' : 'bg-[#052878] text-white'}`}
+            disabled={loading}
           >
-            {showPassword ? (
-              <EyeSlashIcon className="h-5 w-5" />
-            ) : (
-              <EyeIcon className="h-5 w-5" />
-            )}
+            {loading ? 'Logging in...' : 'Login'}
           </button>
-        </div>
-        <button
-          type="submit"
-          className={`w-full py-2 rounded ${loading ? 'bg-gray-400' : 'bg-blue-600 text-white'}`}
-          disabled={loading}
-        >
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-        {error && <p className="text-red-500">{error}</p>}
-      </form>
+          {error && <p className="text-red-500">{error}</p>}
+        </form>
+      </div>
     </div>
+
   );
 }

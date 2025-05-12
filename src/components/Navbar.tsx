@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
 const navItems = [
-  { name: 'Home', href: '/dashboard' },
+  { name: 'ResizeImage', href: '/dashboard' },
   { name: 'ImageToText', href: '/dashboard/ImageToText' },
 //   { name: 'Services', href: '/services' },
 //   { name: 'Contact', href: '/contact' },
@@ -14,8 +14,8 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="border-b flex"> 
-      <div className="max-w-6xl mx-auto px-4 py-3 flex space-x-6 font-semibold">
+   <nav className="flex bg-[#f2f5f9]">
+      <div className="container items-center justify-center max-w-6xl mx-auto px-4 py-3 flex space-x-6 font-semibold">
         {navItems.map(({ name, href }) => (
           <Link
             key={href}
@@ -23,23 +23,25 @@ export default function Navbar() {
             className={clsx(
               'relative pb-1',
               pathname === href
-                ? 'text-blue-600 after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-blue-600 after:rounded'
-                : 'text-gray-700 hover:text-blue-600'
+                ? 'text-[#052878] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-[#052878] after:rounded'
+                : 'text-[#64748B] hover:text-[#052878]'
             )}
           >
             {name}
           </Link>
         ))}
-      </div>
-       <button
+
+           <button
         onClick={() => {
           localStorage.removeItem('auth');
           location.href = '/resize_image/login';
         }}
-        className="mb-2 bg-red-600 text-white px-4 py-2 rounded"
+        className="mb-2 bg-red-600 text-white px-4 py-2 cursor-pointer"
       >
         Logout
       </button>
+      </div>
+    
     </nav>
   );
 }

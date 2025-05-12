@@ -95,86 +95,88 @@ export default function ImageUploader() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-6">
+    <>
       <Navbar />
-      <h1 className="text-2xl font-bold">Upload or Paste Images (1280x720 Resize)</h1>
 
-      {/* Resize mode selector */}
-      <div className="flex gap-4 items-center">
-        <label className="font-medium">Resize Mode:</label>
-        {['fill', 'cover'].map(mode => (
-          <button
-            key={mode}
-            onClick={() => setResizeMode(mode as 'fill' | 'cover')}
-            className={`px-3 py-1 rounded ${
-              resizeMode === mode ? 'bg-green-600 text-white' : 'bg-gray-300'
-            }`}
-          >
-            {mode}
-          </button>
-        ))}
-      </div>
+      <div className="max-w-xl mx-auto p-6 space-y-6">
 
-      {/* Buttons */}
-      <div className="flex gap-2">
-        <button
-          onClick={handleNewUpload}
-          className="bg-green-600 text-white px-4 py-2 rounded-full"
-        >
-          New Upload
-        </button>
-        <button
-          onClick={handleResizeAndDownload}
-          disabled={loading || files.length === 0}
-          className="bg-green-600 text-white px-4 py-2 rounded-full flex items-center gap-2 disabled:opacity-50"
-        >
-          <ArrowDownTrayIcon className="h-5 w-5" />
-          {loading ? `Downloading... (${progress}%)` : 'Resize & Download'}
-        </button>
-      </div>
+        <h1 className="text-2xl font-bold">Upload or Paste Images (1280x720 Resize)</h1>
 
-      {/* Upload Input */}
-      <div className="border-2 border-green-500 border-dashed p-4 rounded-md">
-        <label className="flex items-center gap-2 text-green-600 font-medium cursor-pointer">
-          <CloudArrowUpIcon className="h-6 w-6" />
-          Upload Images
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            hidden
-            onChange={handleFileChange}
-          />
-        </label>
-        <p className="text-sm mt-2 text-gray-500">Or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste an image</p>
-      </div>
-
-      {/* Preview */}
-      <div
-        ref={pasteRef}
-        className="grid grid-cols-3 gap-2 max-h-80 overflow-auto border rounded p-2"
-      >
-        {files.map((file, idx) => (
-          <img
-            key={idx}
-            src={URL.createObjectURL(file)}
-            alt={`preview-${idx}`}
-            className={`w-full h-24 rounded ${
-              resizeMode === 'cover' ? 'object-cover' : 'object-fill'
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Progress bar */}
-      {loading && (
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-green-600 h-2 rounded-full transition-all"
-            style={{ width: `${progress}%` }}
-          />
+        {/* Resize mode selector */}
+        <div className="flex gap-4 items-center">
+          <label className="font-medium">Resize Mode:</label>
+          {['fill', 'cover'].map(mode => (
+            <button
+              key={mode}
+              onClick={() => setResizeMode(mode as 'fill' | 'cover')}
+              className={`px-3 py-1 ${resizeMode === mode ? 'bg-green-600 text-white' : 'bg-gray-300'
+                }`}
+            >
+              {mode}
+            </button>
+          ))}
         </div>
-      )}
-    </div>
+
+        {/* Buttons */}
+        <div className="flex gap-2">
+          <button
+            onClick={handleNewUpload}
+            className="bg-green-600 text-white px-4 py-2"
+          >
+            New Upload
+          </button>
+          <button
+            onClick={handleResizeAndDownload}
+            disabled={loading || files.length === 0}
+            className="bg-green-600 text-white px-4 py-2 flex items-center gap-2 disabled:opacity-50"
+          >
+            <ArrowDownTrayIcon className="h-5 w-5" />
+            {loading ? `Downloading... (${progress}%)` : 'Resize & Download'}
+          </button>
+        </div>
+
+        {/* Upload Input */}
+        <div className="border-2 border-green-500 border-dashed p-4">
+          <label className="flex items-center gap-2 text-green-600 font-medium cursor-pointer">
+            <CloudArrowUpIcon className="h-6 w-6" />
+            Upload Images
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              hidden
+              onChange={handleFileChange}
+            />
+          </label>
+          <p className="text-sm mt-2 text-gray-500">Or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste an image</p>
+        </div>
+
+        {/* Preview */}
+        <div
+          ref={pasteRef}
+          className="grid grid-cols-3 gap-2 max-h-80 overflow-auto border-2 border-green-500 border-dashed p-2"
+        >
+          {files.map((file, idx) => (
+            <img
+              key={idx}
+              src={URL.createObjectURL(file)}
+              alt={`preview-${idx}`}
+              className={`w-full h-24 ${resizeMode === 'cover' ? 'object-cover' : 'object-fill'
+                }`}
+            />
+          ))}
+        </div>
+
+        {/* Progress bar */}
+        {loading && (
+          <div className="w-full bg-gray-200 h-2 ">
+            <div
+              className="bg-green-600 h-2 transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        )}
+      </div>
+    </>
   );
 }

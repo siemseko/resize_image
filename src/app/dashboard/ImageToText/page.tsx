@@ -64,61 +64,64 @@ export default function ImageToText() {
   }, []);
 
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-6">
+    <>
       <Navbar />
+      <div className="max-w-xl mx-auto p-6 space-y-6">
 
-      <h1 className="text-2xl font-bold text-center">
-        🖼️ Image to Text (OCRsd) <br />
-        <span className="text-green-600">Khmer + English</span>
-      </h1>
 
-      {/* Upload section */}
-      <div className="border-2 border-green-500 border-dashed p-4 rounded-md text-center">
-        <label className="flex justify-center items-center gap-2 cursor-pointer text-green-600 font-medium">
-          <CloudArrowUpIcon className="h-6 w-6" />
-          Upload Image
-          <input
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={handleFileChange}
-          />
-        </label>
-        <p className="text-sm text-gray-500 mt-2">
-          Or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste an image
-        </p>
+        <h1 className="text-2xl font-bold text-center">
+          🖼️ Image to Text (OCRsd) <br />
+          <span className="text-green-600">Khmer + English</span>
+        </h1>
+
+        {/* Upload section */}
+        <div className="border-2 border-green-500 border-dashed p-4 text-center">
+          <label className="flex justify-center items-center gap-2 cursor-pointer text-green-600 font-medium">
+            <CloudArrowUpIcon className="h-6 w-6" />
+            Upload Image
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleFileChange}
+            />
+          </label>
+          <p className="text-sm text-gray-500 mt-2">
+            Or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste an image
+          </p>
+        </div>
+
+        {/* Preview */}
+        {image && (
+          <div className="text-center">
+            <img
+              src={URL.createObjectURL(image)}
+              alt="Uploaded preview"
+              className="max-h-64 shadow mx-auto"
+            />
+          </div>
+        )}
+
+        {/* Convert Button */}
+        <button
+          onClick={handleConvert}
+          disabled={!image || loading}
+          className="w-full bg-blue-600 text-white px-4 py-2 disabled:opacity-50 font-[Kantumruy_Pro]"
+        >
+          {loading ? 'កំពុងបម្លែង...' : 'បម្លែងជាអក្សរ'}
+        </button>
+
+        {/* OCR Result */}
+        {text && (
+          <div className="mt-4 p-4 bg-gray-100 whitespace-pre-wrap border border-gray-300">
+            <strong>អត្ថបទបកប្រែ:</strong>
+            <p>{text}</p>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && <div className="text-red-600 font-medium">{error}</div>}
       </div>
-
-      {/* Preview */}
-      {image && (
-        <div className="text-center">
-          <img
-            src={URL.createObjectURL(image)}
-            alt="Uploaded preview"
-            className="max-h-64 rounded shadow mx-auto"
-          />
-        </div>
-      )}
-
-      {/* Convert Button */}
-      <button
-        onClick={handleConvert}
-        disabled={!image || loading}
-        className="w-full bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 font-[Kantumruy_Pro]"
-      >
-        {loading ? 'កំពុងបម្លែង...' : 'បម្លែងជាអក្សរ'}
-      </button>
-
-      {/* OCR Result */}
-      {text && (
-        <div className="mt-4 p-4 bg-gray-100 rounded whitespace-pre-wrap border border-gray-300">
-          <strong>អត្ថបទបកប្រែ:</strong>
-          <p>{text}</p>
-        </div>
-      )}
-
-      {/* Error Message */}
-      {error && <div className="text-red-600 font-medium">{error}</div>}
-    </div>
+    </>
   );
 }
