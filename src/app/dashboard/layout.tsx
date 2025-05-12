@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const VALID_EMAIL = 'admin@example.com'; //your static valid email
+const VALID_EMAIL = 'admin@gmail.com';  
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);

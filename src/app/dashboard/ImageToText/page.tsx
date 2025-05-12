@@ -119,18 +119,7 @@ export default function ImageToText() {
         <div className="text-red-600 font-medium">
           {error}
         </div>
-      )}
-
-      <button
-        onClick={() => {
-          localStorage.removeItem('auth');
-          location.href = '/resize_image/login';
-        }}
-        className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
-      >
-        Logout
-      </button>
-
+      )}  
     </div>
   );
 }

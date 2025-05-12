@@ -1,37 +1,74 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { ArrowDownTrayIcon, CloudArrowUpIcon } from '@heroicons/react/24/solid';
 import Navbar from '@/components/Navbar';
 
-export default function HomePage() {
+export default function ImageUploader() {
   const [files, setFiles] = useState<File[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [loading, setLoading] = useState(false);
   const [resizeMode, setResizeMode] = useState<'fill' | 'cover'>('fill');
+  const pasteRef = useRef<HTMLDivElement>(null);
 
-  const handleResizeAndDownload = async () => {
-    if (files.length === 0) return;
-    setLoading(true);
-    setProgress(0);
+  // 🔹 Handle pasted image from clipboard
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) => {
+      const items = event.clipboardData?.items;
+      if (items) {
+        const images = Array.from(items)
+          .filter(item => item.type.startsWith('image/'))
+          .map(item => item.getAsFile())
+          .filter((f): f is File => f !== null);
+        if (images.length > 0) {
+          setFiles(prev => [...prev, ...images]);
+        }
+      }
+    };
+    document.addEventListener('paste', handlePaste);
+    return () => document.removeEventListener('paste', handlePaste);
+  }, []);
 
-    const zip = new JSZip();
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const resizedBlob = await resizeImageTo1280x720(file, resizeMode);
-      const filename = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
-      zip.file(filename, resizedBlob);
-      setProgress(Math.floor(((i + 1) / files.length) * 100));
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+      setFiles(prev => [...prev, ...selectedFiles]);
     }
-
-    const content = await zip.generateAsync({ type: 'blob' });
-    saveAs(content, 'resized_images.zip');
-
-    setLoading(false);
-    setProgress(100);
   };
+
+  const handleNewUpload = () => {
+    setFiles([]);
+    setProgress(0);
+  };
+
+const handleResizeAndDownload = async () => {
+  if (files.length === 0) return;
+  setLoading(true);
+  setProgress(0);
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const resizedBlob = await resizeImageTo1280x720(file, resizeMode);
+    const filename = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
+
+    // Trigger browser download for each file
+    const url = URL.createObjectURL(resizedBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    setProgress(Math.floor(((i + 1) / files.length) * 100));
+  }
+
+  setLoading(false);
+  setProgress(100);
+};
 
   const resizeImageTo1280x720 = (file: File, mode: 'fill' | 'cover'): Promise<Blob> => {
     return new Promise((resolve, reject) => {
@@ -44,10 +81,8 @@ export default function HomePage() {
         if (!ctx) return reject('Canvas not supported');
 
         if (mode === 'fill') {
-          // Stretch to fill canvas (may distort)
           ctx.drawImage(img, 0, 0, 1280, 720);
         } else {
-          // Preserve aspect ratio, crop as needed (like object-cover)
           const scale = Math.max(1280 / img.width, 720 / img.height);
           const newWidth = img.width * scale;
           const newHeight = img.height * scale;
@@ -56,76 +91,55 @@ export default function HomePage() {
           ctx.drawImage(img, dx, dy, newWidth, newHeight);
         }
 
-        canvas.toBlob((blob) => {
-          if (blob) resolve(blob);
-          else reject('Blob creation failed');
-        }, 'image/jpeg', 0.9);
+        canvas.toBlob(blob => blob ? resolve(blob) : reject('Blob creation failed'), 'image/jpeg', 0.9);
       };
       img.onerror = reject;
       img.src = URL.createObjectURL(file);
     });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files);
-      if (selectedFiles.length + files.length > 20) {
-        alert('You can only upload up to 20 images.');
-      } else {
-        setFiles([...files, ...selectedFiles]);
-      }
-    }
-  };
-
-  const handleNewUpload = () => {
-    setFiles([]);
-    setProgress(0);
-  };
-
   return (
     <div className="max-w-xl mx-auto p-6 space-y-6">
       <Navbar/>
-      <h1 className="text-2xl font-bold">Resize Images to 1280x720 (Client-Side)</h1>
+      <h1 className="text-2xl font-bold">Upload or Paste Images (1280x720 Resize)</h1>
 
       {/* Resize mode selector */}
-      <div className="flex items-center gap-4">
+      <div className="flex gap-4 items-center">
         <label className="font-medium">Resize Mode:</label>
-        <button
-          onClick={() => setResizeMode('fill')}
-          className={`cursor-pointer px-3 py-1 rounded ${resizeMode === 'fill' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
-        >
-          Fill
-        </button>
-        <button
-          onClick={() => setResizeMode('cover')}
-          className={`cursor-pointer px-3 py-1 rounded ${resizeMode === 'cover' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
-        >
-          Cover
-        </button>
+        {['fill', 'cover'].map(mode => (
+          <button
+            key={mode}
+            onClick={() => setResizeMode(mode as 'fill' | 'cover')}
+            className={`px-3 py-1 rounded ${
+              resizeMode === mode ? 'bg-green-600 text-white' : 'bg-gray-300'
+            }`}
+          >
+            {mode}
+          </button>
+        ))}
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex items-center gap-2">
+      {/* Buttons */}
+      <div className="flex gap-2">
         <button
           onClick={handleNewUpload}
-          className="bg-green-600 text-white px-4 py-2 rounded-full cursor-pointer"
+          className="bg-green-600 text-white px-4 py-2 rounded-full"
         >
           New Upload
         </button>
-
         <button
-          disabled={loading || files.length === 0}
           onClick={handleResizeAndDownload}
-          className="bg-green-600 text-white px-4 py-2 rounded-full flex items-center gap-2 disabled:opacity-50 cursor-pointer disabled:cursor-no-drop"
+          disabled={loading || files.length === 0}
+          className="bg-green-600 text-white px-4 py-2 rounded-full flex items-center gap-2 disabled:opacity-50"
         >
           <ArrowDownTrayIcon className="h-5 w-5" />
-          {loading ? `Downloading... (${progress}%)` : 'Resize & Download ZIP'}
+          {loading ? `Downloading... (${progress}%)` : 'Resize & Download'}
         </button>
       </div>
 
       {/* Upload Input */}
       <div className="border-2 border-green-500 border-dashed p-4 rounded-md">
-        <label className="flex items-center gap-2 cursor-pointer text-green-600 font-medium">
+        <label className="flex items-center gap-2 text-green-600 font-medium cursor-pointer">
           <CloudArrowUpIcon className="h-6 w-6" />
           Upload Images
           <input
@@ -136,25 +150,27 @@ export default function HomePage() {
             onChange={handleFileChange}
           />
         </label>
+        <p className="text-sm mt-2 text-gray-500">Or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste an image</p>
       </div>
-      <div className="max-w-xl mx-auto p-6 space-y-6 max-h-screen overflow-auto">
-        {/* Image Preview */}
-        {files.length > 0 && (
-          <div className="grid grid-cols-3 gap-2">
-            {files.map((file, index) => (
-              <img
-                key={index}
-                src={URL.createObjectURL(file)}
-                alt={file.name}
-                className={`w-full h-24 rounded ${resizeMode === 'fill' ? 'object-fill' : 'object-cover'}`}
-              />
-            ))}
-          </div>
-        )}
+
+      {/* Preview */}
+      <div
+        ref={pasteRef}
+        className="grid grid-cols-3 gap-2 max-h-80 overflow-auto border rounded p-2"
+      >
+        {files.map((file, idx) => (
+          <img
+            key={idx}
+            src={URL.createObjectURL(file)}
+            alt={`preview-${idx}`}
+            className={`w-full h-24 object-${resizeMode} rounded`}
+          />
+        ))}
       </div>
+
       {/* Progress bar */}
       {loading && (
-        <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+        <div className="w-full bg-gray-200 rounded-full h-2">
           <div
             className="bg-green-600 h-2 rounded-full transition-all"
             style={{ width: `${progress}%` }}

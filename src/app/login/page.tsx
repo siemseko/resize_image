@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const USER = {
-  email: 'admin@example.com',
-  password: '123456',
+  email: 'admin@gmail.com',
+  password: '@123456',
 };
 
 export default function LoginPage() {

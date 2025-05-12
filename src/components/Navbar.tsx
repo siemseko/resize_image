@@ -14,7 +14,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="border-b">
+    <nav className="border-b flex"> 
       <div className="max-w-6xl mx-auto px-4 py-3 flex space-x-6 font-semibold">
         {navItems.map(({ name, href }) => (
           <Link
@@ -31,6 +31,15 @@ export default function Navbar() {
           </Link>
         ))}
       </div>
+       <button
+        onClick={() => {
+          localStorage.removeItem('auth');
+          location.href = '/resize_image/login';
+        }}
+        className="mb-2 bg-red-600 text-white px-4 py-2 rounded"
+      >
+        Logout
+      </button>
     </nav>
   );
 }
