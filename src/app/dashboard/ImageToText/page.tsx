@@ -106,7 +106,7 @@ export default function ImageToText() {
         <button
           onClick={handleConvert}
           disabled={!image || loading}
-          className="w-full bg-blue-600 text-white px-4 py-2 disabled:opacity-50 font-[Kantumruy_Pro]"
+          className="w-full bg-[#052878] text-white px-4 py-2 disabled:opacity-50 font-[Kantumruy_Pro]"
         >
           {loading ? 'កំពុងបម្លែង...' : 'បម្លែងជាអក្សរ'}
         </button>
