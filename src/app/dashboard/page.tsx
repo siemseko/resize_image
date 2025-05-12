@@ -1,7 +1,5 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
 import { ArrowDownTrayIcon, CloudArrowUpIcon } from '@heroicons/react/24/solid';
 import Navbar from '@/components/Navbar';
 

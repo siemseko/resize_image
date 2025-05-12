@@ -68,7 +68,8 @@ export default function ImageToText() {
       <Navbar />
 
       <h1 className="text-2xl font-bold text-center">
-        🖼️ Image to Text (OCRsd) <br /> <span className="text-green-600">Khmer + English</span>
+        🖼️ Image to Text (OCRsd) <br />
+        <span className="text-green-600">Khmer + English</span>
       </h1>
 
       {/* Upload section */}
@@ -83,7 +84,9 @@ export default function ImageToText() {
             onChange={handleFileChange}
           />
         </label>
-        <p className="text-sm text-gray-500 mt-2">Or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste an image</p>
+        <p className="text-sm text-gray-500 mt-2">
+          Or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste an image
+        </p>
       </div>
 
       {/* Preview */}
@@ -115,11 +118,7 @@ export default function ImageToText() {
       )}
 
       {/* Error Message */}
-      {error && (
-        <div className="text-red-600 font-medium">
-          {error}
-        </div>
-      )}  
+      {error && <div className="text-red-600 font-medium">{error}</div>}
     </div>
   );
 }
