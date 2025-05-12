@@ -1,54 +1,36 @@
-## Prerequisites
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-- Node.js 20.x (Recommended)
+## Getting Started
 
-## Installation
+First, run the development server:
 
-**Using Yarn (Recommended)**
-
-```sh
-yarn install
-yarn dev
-```
-
-**Using Npm**
-
-```sh
-npm i
+```bash
 npm run dev
-```
-
-## Build
-
-```sh
-yarn build
 # or
-npm run build
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## Mock server
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-By default we provide demo data from : `https://api-dev-minimal-[version].vercel.app`
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-To set up your local server:
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-- **Guide:** [https://docs.minimals.cc/mock-server](https://docs.minimals.cc/mock-server).
+## Learn More
 
-- **Resource:** [Download](https://www.dropbox.com/sh/6ojn099upi105tf/AACpmlqrNUacwbBfVdtt2t6va?dl=0).
+To learn more about Next.js, take a look at the following resources:
 
-## Full version
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- Create React App ([migrate to CRA](https://docs.minimals.cc/migrate-to-cra/)).
-- Next.js
-- Vite.js
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Starter version
+## Deploy on Vercel
 
-- To remove unnecessary components. This is a simplified version ([https://starter.minimals.cc/](https://starter.minimals.cc/))
-- Good to start a new project. You can copy components from the full version.
-- Make sure to install the dependencies exactly as compared to the full version.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
----
-
-**NOTE:**
-_When copying folders remember to also copy hidden files like .env. This is important because .env files often contain environment variables that are crucial for the application to run correctly._
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
