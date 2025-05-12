@@ -10,7 +10,6 @@ export default function ImageUploader() {
   const [resizeMode, setResizeMode] = useState<'fill' | 'cover'>('fill');
   const pasteRef = useRef<HTMLDivElement>(null);
 
-  // 🔹 Handle pasted image from clipboard
   useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
       const items = event.clipboardData?.items;
@@ -40,33 +39,32 @@ export default function ImageUploader() {
     setProgress(0);
   };
 
-const handleResizeAndDownload = async () => {
-  if (files.length === 0) return;
-  setLoading(true);
-  setProgress(0);
+  const handleResizeAndDownload = async () => {
+    if (files.length === 0) return;
+    setLoading(true);
+    setProgress(0);
 
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    const resizedBlob = await resizeImageTo1280x720(file, resizeMode);
-    const filename = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const resizedBlob = await resizeImageTo1280x720(file, resizeMode);
+      const filename = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
 
-    // Trigger browser download for each file
-    const url = URL.createObjectURL(resizedBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+      const url = URL.createObjectURL(resizedBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
 
-    setProgress(Math.floor(((i + 1) / files.length) * 100));
-  }
+      setProgress(Math.floor(((i + 1) / files.length) * 100));
+    }
 
-  setLoading(false);
-  setProgress(100);
-};
+    setLoading(false);
+    setProgress(100);
+  };
 
   const resizeImageTo1280x720 = (file: File, mode: 'fill' | 'cover'): Promise<Blob> => {
     return new Promise((resolve, reject) => {
@@ -98,7 +96,7 @@ const handleResizeAndDownload = async () => {
 
   return (
     <div className="max-w-xl mx-auto p-6 space-y-6">
-      <Navbar/>
+      <Navbar />
       <h1 className="text-2xl font-bold">Upload or Paste Images (1280x720 Resize)</h1>
 
       {/* Resize mode selector */}
@@ -161,7 +159,9 @@ const handleResizeAndDownload = async () => {
             key={idx}
             src={URL.createObjectURL(file)}
             alt={`preview-${idx}`}
-            className={`w-full h-24 object-${resizeMode} rounded`}
+            className={`w-full h-24 rounded ${
+              resizeMode === 'cover' ? 'object-cover' : 'object-fill'
+            }`}
           />
         ))}
       </div>
