@@ -16,7 +16,7 @@ export default function Navbar() {
   return (
     <div className="bg-[#f2f5f9]">
       <div className="container mx-auto flex items-center justify-between px-4 py-2 font-semibold relative z-50">
-        <img src="/images/sekoAI_Logo.png" alt="Logo" width={70} />
+        <img src="https://siemseko.github.io/resize_image/images/sekoAI_Logo.png" alt="Logo" width={70} />
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-4">
