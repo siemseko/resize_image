@@ -71,12 +71,12 @@ export default function ImageToText() {
 
         <h1 className="text-2xl font-bold text-center">
           🖼️ Image to Text (OCRsd) <br />
-          <span className="text-green-600">Khmer + English</span>
+          <span className="text-[#052878]">Khmer + English</span>
         </h1>
 
         {/* Upload section */}
-        <div className="border-2 border-green-500 border-dashed p-4 text-center">
-          <label className="flex justify-center items-center gap-2 cursor-pointer text-green-600 font-medium">
+        <div className="border-2 border-[#052878] border-dashed p-4 text-center">
+          <label className="flex justify-center items-center gap-2 cursor-pointer text-[#052878] font-medium">
             <CloudArrowUpIcon className="h-6 w-6" />
             Upload Image
             <input
