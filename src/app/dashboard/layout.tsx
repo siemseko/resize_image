@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const VALID_USERS = [
-  'admin@gmail.com',
+  'admin_ai@gmail.com',
   'user1@gmail.com',
   'user2@gmail.com',
 ];

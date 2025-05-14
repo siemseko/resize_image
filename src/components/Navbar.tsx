@@ -4,8 +4,8 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useState } from 'react';
 const navItems = [
-  { name: 'ResizeImage', href: '/dashboard', icon: '/icons/image-solid.svg' },
-  { name: 'ImageToText', href: '/dashboard/ImageToText', icon: '/icons/envelope-open-text-solid.svg' }, 
+  { name: 'ResizeImage', href: '/dashboard', icon: 'https://siemseko.github.io/resize_image/icons/image-solid.svg' },
+  { name: 'ImageToText', href: '/dashboard/ImageToText', icon: 'https://siemseko.github.io/resize_image/icons/envelope-open-text-solid.svg' }, 
 ];
 
 export default function Navbar() {
