@@ -4,12 +4,23 @@ import Navbar from '@/components/Navbar';
 import { useEffect, useState } from 'react';
 import Tesseract from 'tesseract.js';
 import { CloudArrowUpIcon } from '@heroicons/react/24/solid';
+import { ClipboardIcon } from '@heroicons/react/24/outline';
 
 export default function ImageToText() {
   const [image, setImage] = useState<File | null>(null);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [history, setHistory] = useState<string[]>([]);
+  const [copySuccess, setCopySuccess] = useState(''); // State for success message
+
+  // Retrieve history from localStorage on page load
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('ocrHistory');
+    if (savedHistory) {
+      setHistory(JSON.parse(savedHistory));
+    }
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -31,6 +42,15 @@ export default function ImageToText() {
         logger: (m) => console.log(m),
       });
       setText(result.data.text);
+
+      // Add the new result to history and keep only the last 5 texts
+      setHistory((prevHistory) => {
+        const newHistory = [result.data.text, ...prevHistory];
+        const updatedHistory = newHistory.slice(0, 5);  // Keep only the last 5
+        // Save the updated history to localStorage
+        localStorage.setItem('ocrHistory', JSON.stringify(updatedHistory));
+        return updatedHistory;
+      });
     } catch (err) {
       console.error(err);
       setError('Failed to extract text. Please try another image.');
@@ -39,7 +59,7 @@ export default function ImageToText() {
     setLoading(false);
   };
 
-  // ✅ Handle Ctrl+V paste image
+  // Handle Ctrl+V paste image
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
       const items = e.clipboardData?.items;
@@ -63,20 +83,25 @@ export default function ImageToText() {
     };
   }, []);
 
+  // Function to copy the extracted text to clipboard
+  const handleCopyText = () => {
+    if (text) {
+      navigator.clipboard.writeText(text).then(() => {
+        setCopySuccess('Text copied to clipboard!');
+        setTimeout(() => setCopySuccess(''), 3000); // Hide after 3 seconds
+      }).catch((err) => {
+        console.error('Failed to copy text: ', err);
+      });
+    }
+  };
+
   return (
     <>
       <Navbar />
-      <div className="max-w-xl mx-auto p-6 space-y-6">
-
-
-        <h1 className="text-2xl font-bold text-center">
-          🖼️ Image to Text (OCRsd) <br />
-          <span className="text-[#052878]">Khmer + English</span>
-        </h1>
-
+      <div className="max-w-screen-sm  mx-auto p-2 space-y-6">
         {/* Upload section */}
-        <div className="border-2 border-[#052878] border-dashed p-4 text-center">
-          <label className="flex justify-center items-center gap-2 cursor-pointer text-[#052878] font-medium">
+        <div className="border-2 border-[#df9c16] border-dashed p-4 text-center">
+          <label className="flex justify-center items-center gap-2 cursor-pointer text-[#df9c16] font-medium">
             <CloudArrowUpIcon className="h-6 w-6" />
             Upload Image
             <input
@@ -106,21 +131,53 @@ export default function ImageToText() {
         <button
           onClick={handleConvert}
           disabled={!image || loading}
-          className="w-full bg-[#052878] text-white px-4 py-2 disabled:opacity-50 font-[Kantumruy_Pro]"
+          className="w-full bg-[#df9c16] text-white px-4 py-2 disabled:opacity-50 font-[Kantumruy_Pro] cursor-pointer"
         >
           {loading ? 'កំពុងបម្លែង...' : 'បម្លែងជាអក្សរ'}
         </button>
 
         {/* OCR Result */}
-        {text && (
-          <div className="mt-4 p-4 bg-gray-100 whitespace-pre-wrap border border-gray-300">
-            <strong>អត្ថបទបកប្រែ:</strong>
-            <p>{text}</p>
-          </div>
-        )}
+        {/* {text && ( */}
+        <div className="mt-4 p-1 border-2 border-[#df9c16] border-dashed">
+          <strong>អត្ថបទបកប្រែ:</strong>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)} // Allow user to edit text
+            className="w-full mt-2 p-2 outline-none "
+            rows={6}
+          />
+
+          {/* Copy Text Button */}
+          <button
+            onClick={handleCopyText}
+            className="mt-2 w-full bg-[#df9c16] text-white px-4 py-2 font-[Kantumruy_Pro] cursor-pointer flex items-center justify-center gap-2"
+          >
+            <ClipboardIcon className="h-5 w-5" /> {/* Add the icon here */}
+            {copySuccess ? (
+              <div className="mt-2 text-green-600 font-medium">{copySuccess}</div>
+            ) : (
+              <div className="mt-2 text-white font-medium">Copy Text</div>
+            )}
+          </button>
+        </div>
+        {/* )} */}
 
         {/* Error Message */}
         {error && <div className="text-red-600 font-medium">{error}</div>}
+
+        {/* History of last 5 texts */}
+        {history.length > 0 && (
+          <div className="mt-6">
+            <h3 className="text-xl font-semibold">Last 5 OCR Results</h3>
+            <ul className="mt-2 space-y-2">
+              {history.map((item, index) => (
+                <li key={index} className="p-4 bg-gray-200 rounded-lg">
+                  <pre className="whitespace-pre-wrap">{item}</pre>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </>
   );

@@ -3,53 +3,62 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useState } from 'react';
+import LanguageSelector from './LanguageSelector';
 const navItems = [
-  { name: 'ResizeImage', href: '/dashboard' },
-  { name: 'ImageToText', href: '/dashboard/ImageToText' },
-  //   { name: 'Services', href: '/services' },
-  //   { name: 'Contact', href: '/contact' },
+  { name: 'ResizeImage', href: '/dashboard', icon: '/icons/image-solid.svg' },
+  { name: 'ImageToText', href: '/dashboard/ImageToText', icon: '/icons/envelope-open-text-solid.svg' }, 
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   return (
-    <div className="bg-[#f2f5f9]">
-      <div className="container mx-auto flex items-center justify-between px-4 py-2 font-semibold relative z-50">
+    <div className="bg-[#efece6] sticky top-0 w-full mx-auto z-50">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2  ">
+        <div className='flex items-center gap-1'>
         <img src="https://siemseko.github.io/resize_image/images/sekoAI_Logo.png" alt="Logo" width={70} />
-
+        {/* <img src="/images/sekoAI_Logo.png" alt="Logo" width={70} /> */}
+        Version-V1.0.1
+        </div>
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-4">
-          {navItems.map(({ name, href }) => (
+          {navItems.map(({ name, href, icon }) => (
             <Link
               key={href}
               href={href}
               className={clsx(
-                'relative pb-1',
+                'relative pb-1 flex items-center gap-2', // Added flex and gap for icon and text
                 pathname === href
-                  ? 'text-[#052878] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-[#052878] after:rounded'
-                  : 'text-[#64748B] hover:text-[#052878]'
+                  ? 'text-[#df9c16] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-[#df9c16] after:rounded'
+                  : 'text-[#64748B] hover:text-[#df9c16]'
               )}
             >
+              {/* Icon */}
+              <img src={icon} alt={`${name} icon`} className="h-5 w-5" /> {/* Set icon size */}
+
+              {/* Text */}
               {name}
             </Link>
           ))}
         </nav>
-        <button
-          onClick={() => {
-            localStorage.removeItem('auth');
-            location.href = '/resize_image/login';
-          }}
-          className="bg-red-600 text-white px-4 py-2 cursor-pointer hidden lg:flex"
-        >
-          Logout
-        </button>
+        <div className='flex items-center gap-5'>
+          {/* <LanguageSelector/> */}
+          <button
+            onClick={() => {
+              localStorage.removeItem('auth');
+              location.href = '/resize_image/login';
+            }}
+            className="bg-[#fc4f4f] text-white px-4 py-2 cursor-pointer hidden lg:flex"
+          >
+            Logout
+          </button>
+        </div>
         {/* Mobile Toggle */}
         <button
           onClick={() => setMenuOpen(true)}
-          className="lg:hidden text-[#052878] focus:outline-none"
+          className="lg:hidden text-[#df9c16] focus:outline-none"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2}
+          <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth={2}
             viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round"
               d="M4 6h16M4 12h16M4 18h16" />
@@ -73,8 +82,8 @@ export default function Navbar() {
         )}
       >
         <div className="flex items-center justify-between px-4 py-4 border-b">
-          <span className="font-semibold text-[#052878]">Menu</span>
-          <button onClick={() => setMenuOpen(false)} className="text-[#052878]">
+          <span className="font-semibold text-[#df9c16]">Menu</span>
+          <button onClick={() => setMenuOpen(false)} className="text-[#df9c16]">
             ✕
           </button>
         </div>
@@ -87,8 +96,8 @@ export default function Navbar() {
               className={clsx(
                 'pb-1',
                 pathname === href
-                  ? 'text-[#052878] font-medium'
-                  : 'text-[#64748B] hover:text-[#052878]'
+                  ? 'text-[#df9c16] font-medium'
+                  : 'text-[#64748B] hover:text-[#df9c16]'
               )}
             >
               {name}

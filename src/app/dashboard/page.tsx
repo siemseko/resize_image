@@ -7,7 +7,7 @@ export default function ImageUploader() {
   const [files, setFiles] = useState<File[]>([]);
   const [progress, setProgress] = useState<number>(0);
   const [loading, setLoading] = useState(false);
-  const [resizeMode, setResizeMode] = useState<'fill' | 'cover'>('fill');
+  const [resizeMode, setResizeMode] = useState<'fill' | 'cover'>('cover');
   const pasteRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -98,9 +98,9 @@ export default function ImageUploader() {
     <>
       <Navbar />
 
-      <div className="max-w-xl mx-auto p-6 space-y-6">
+      <div className="max-w-screen-sm  mx-auto p-2 space-y-6">
 
-        <h1 className="text-2xl font-bold">Upload or Paste Images (1280x720 Resize)</h1>
+        {/* <h1 className="text-2xl font-bold">Upload or Paste Images (1280x720 Resize)</h1> */}
 
         {/* Resize mode selector */}
         <div className="flex gap-4 items-center">
@@ -109,7 +109,7 @@ export default function ImageUploader() {
             <button
               key={mode}
               onClick={() => setResizeMode(mode as 'fill' | 'cover')}
-              className={`px-3 py-1 ${resizeMode === mode ? 'bg-[#052878] text-white' : 'bg-gray-300'
+              className={`px-3 py-1 cursor-pointer ${resizeMode === mode ? 'bg-[#df9c16] text-white' : 'bg-gray-300'
                 }`}
             >
               {mode}
@@ -121,14 +121,14 @@ export default function ImageUploader() {
         <div className="flex gap-2">
           <button
             onClick={handleNewUpload}
-            className="bg-[#052878] text-white px-4 py-2"
+            className="bg-[#df9c16] text-white px-4 py-2 cursor-pointer"
           >
             New Upload
           </button>
           <button
             onClick={handleResizeAndDownload}
             disabled={loading || files.length === 0}
-            className="bg-[#052878] text-white px-4 py-2 flex items-center gap-2 disabled:opacity-50"
+            className="bg-[#df9c16] text-white px-4 py-2 flex items-center gap-2 disabled:opacity-50 cursor-pointer"
           >
             <ArrowDownTrayIcon className="h-5 w-5" />
             {loading ? `Downloading... (${progress}%)` : 'Resize & Download'}
@@ -136,8 +136,8 @@ export default function ImageUploader() {
         </div>
 
         {/* Upload Input */}
-        <div className="border-2 border-[#052878] border-dashed p-4">
-          <label className="flex items-center gap-2 text-[#052878] font-medium cursor-pointer">
+        <div className="border-2 border-[#df9c16] border-dashed p-4">
+          <label className="flex items-center gap-2 text-[#df9c16] font-medium cursor-pointer">
             <CloudArrowUpIcon className="h-6 w-6" />
             Upload Images
             <input
@@ -154,7 +154,7 @@ export default function ImageUploader() {
         {/* Preview */}
         <div
           ref={pasteRef}
-          className="grid grid-cols-3 gap-2 max-h-80 overflow-auto border-2 border-[#052878] border-dashed p-2"
+          className="grid grid-cols-4 gap-2 max-h-90 overflow-auto border-2 border-[#df9c16] border-dashed p-2"
         >
           {files.map((file, idx) => (
             <img
@@ -171,7 +171,7 @@ export default function ImageUploader() {
         {loading && (
           <div className="w-full bg-gray-200 h-2 ">
             <div
-              className="bg-[#052878] h-2 transition-all"
+              className="bg-[#df9c16] h-2 transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
