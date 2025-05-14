@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useState } from 'react';
-import LanguageSelector from './LanguageSelector';
 const navItems = [
   { name: 'ResizeImage', href: '/dashboard', icon: '/icons/image-solid.svg' },
   { name: 'ImageToText', href: '/dashboard/ImageToText', icon: '/icons/envelope-open-text-solid.svg' }, 
@@ -41,8 +40,7 @@ export default function Navbar() {
             </Link>
           ))}
         </nav>
-        <div className='flex items-center gap-5'>
-          {/* <LanguageSelector/> */}
+        <div className='flex items-center gap-5'> 
           <button
             onClick={() => {
               localStorage.removeItem('auth');
