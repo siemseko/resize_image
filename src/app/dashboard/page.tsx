@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { ArrowDownTrayIcon, CloudArrowUpIcon } from '@heroicons/react/24/solid';
-import Navbar from '@/components/Navbar';
+import {  CloudArrowUpIcon } from '@heroicons/react/24/solid';
+import { ArrowDownToLine, Images, Plus } from 'lucide-react';
 
 export default function ImageUploader() {
   const [files, setFiles] = useState<File[]>([]);
@@ -94,50 +94,60 @@ export default function ImageUploader() {
     });
   };
 
+
+  const toggleResizeMode = () => {
+    setResizeMode(prev => (prev === 'fill' ? 'cover' : 'fill'));
+  };
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
 
       <div className="max-w-screen-sm  mx-auto p-2 space-y-6">
 
         {/* <h1 className="text-2xl font-bold">Upload or Paste Images (1280x720 Resize)</h1> */}
 
         {/* Resize mode selector */}
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           <label className="font-medium">Resize Mode:</label>
-          {['fill', 'cover'].map(mode => (
-            <button
-              key={mode}
-              onClick={() => setResizeMode(mode as 'fill' | 'cover')}
-              className={`px-3 py-1 cursor-pointer ${resizeMode === mode ? 'bg-[#df9c16] text-white' : 'bg-gray-300'
-                }`}
-            >
-              {mode}
-            </button>
-          ))}
+
+          <div className="flex items-center gap-2">
+
+
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={resizeMode === 'cover'}
+                onChange={toggleResizeMode}
+              />
+              <div className="w-11 h-6 bg-[#39383d] peer-focus:outline-none rounded-full peer peer-checked:bg-[#2fd159] transition-all"></div>
+              <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform transform peer-checked:translate-x-5"></div>
+            </label>
+            <span className="text-sm">{resizeMode === 'fill' ? 'Fill' : 'Cover'}</span>
+          </div>
         </div>
 
         {/* Buttons */}
         <div className="flex gap-2">
           <button
             onClick={handleNewUpload}
-            className="bg-[#df9c16] text-white px-4 py-2 cursor-pointer"
+            className="bg-[#1c1c1c] text-white px-4 py-2 cursor-pointer rounded-[8px] "
           >
-            New Upload
+            <Plus />
           </button>
           <button
             onClick={handleResizeAndDownload}
             disabled={loading || files.length === 0}
-            className="bg-[#df9c16] text-white px-4 py-2 flex items-center gap-2 disabled:opacity-50 cursor-pointer"
+            className="bg-[#2fd159] text-white rounded-[8px] px-4 py-2 flex items-center gap-2 disabled:opacity-50 cursor-pointer"
           >
-            <ArrowDownTrayIcon className="h-5 w-5" />
-            {loading ? `Downloading... (${progress}%)` : 'Resize & Download'}
+            {loading ? (<><ArrowDownToLine /> {`(${progress}%)`} </>) : (<ArrowDownToLine />)}
+
           </button>
         </div>
 
         {/* Upload Input */}
-        <div className="border-2 border-[#df9c16] border-dashed p-4">
-          <label className="flex items-center gap-2 text-[#df9c16] font-medium cursor-pointer">
+        <div className="bg-[#1c1c1c] rounded-[8px] p-4">
+          <label className="flex items-center gap-2 text-[#ffffff] font-medium cursor-pointer">
             <CloudArrowUpIcon className="h-6 w-6" />
             Upload Images
             <input
@@ -154,24 +164,32 @@ export default function ImageUploader() {
         {/* Preview */}
         <div
           ref={pasteRef}
-          className="grid grid-cols-4 gap-2 max-h-90 overflow-auto border-2 border-[#df9c16] border-dashed p-2"
+          className="grid grid-cols-4 gap-2 max-h-90 overflow-auto bg-[#1c1c1c]  rounded-[8px] p-2 black-scrollbar"
         >
-          {files.map((file, idx) => (
-            <img
-              key={idx}
-              src={URL.createObjectURL(file)}
-              alt={`preview-${idx}`}
-              className={`w-full h-24 ${resizeMode === 'cover' ? 'object-cover' : 'object-fill'
-                }`}
-            />
-          ))}
+          {files.length === 0 ? (
+            <div className="col-span-4 flex items-center justify-center ">
+              <Images strokeWidth={0.5} size={200} color="#8f8e9357"   />
+            </div>
+
+          ) : (
+            files.map((file, idx) => (
+              <img
+                key={idx}
+                src={URL.createObjectURL(file)}
+                alt={`preview-${idx}`}
+                className={`w-full h-24 ${resizeMode === 'cover' ? 'object-cover' : 'object-fill'
+                  }`}
+              />
+            ))
+          )}
         </div>
+
 
         {/* Progress bar */}
         {loading && (
           <div className="w-full bg-gray-200 h-2 ">
             <div
-              className="bg-[#df9c16] h-2 transition-all"
+              className="bg-[#1c1c1c] h-2 transition-all"
               style={{ width: `${progress}%` }}
             />
           </div>
