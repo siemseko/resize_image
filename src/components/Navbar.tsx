@@ -1,117 +1,129 @@
 'use client';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
-import { useState } from 'react';
-const navItems = [
-  { name: 'ResizeImage', href: '/dashboard', icon: 'https://siemseko.github.io/resize_image/icons/image-solid.svg' },
-  { name: 'ImageToText', href: '/dashboard/ImageToText', icon: 'https://siemseko.github.io/resize_image/icons/envelope-open-text-solid.svg' }, 
-];
+
+import { useState, useRef, useEffect } from 'react';
+import { LogOut, Globe, ChevronDown, User, Slack } from 'lucide-react';
 
 export default function Navbar() {
-  const pathname = usePathname();
-  const [menuOpen, setMenuOpen] = useState(false);
-  return (
-    <div className="bg-[#efece6] sticky top-0 w-full mx-auto z-50">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2  ">
-        <div className='flex items-center gap-1'>
-        <img src="https://siemseko.github.io/resize_image/images/sekoAI_Logo.png" alt="Logo" width={70} />
-        {/* <img src="/images/sekoAI_Logo.png" alt="Logo" width={70} /> */}
-        Version-V1.0.1
-        </div>
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-4">
-          {navItems.map(({ name, href, icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={clsx(
-                'relative pb-1 flex items-center gap-2', // Added flex and gap for icon and text
-                pathname === href
-                  ? 'text-[#df9c16] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-[#df9c16] after:rounded'
-                  : 'text-[#64748B] hover:text-[#df9c16]'
-              )}
-            >
-              {/* Icon */}
-              <img src={icon} alt={`${name} icon`} className="h-5 w-5" /> {/* Set icon size */}
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const languageRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
 
-              {/* Text */}
-              {name}
-            </Link>
-          ))}
-        </nav>
-        <div className='flex items-center gap-5'> 
-          <button
-            onClick={() => {
-              localStorage.removeItem('auth');
-              location.href = '/resize_image/login';
-            }}
-            className="bg-[#fc4f4f] text-white px-4 py-2 cursor-pointer hidden lg:flex"
-          >
-            Logout
-          </button>
-        </div>
-        {/* Mobile Toggle */}
-        <button
-          onClick={() => setMenuOpen(true)}
-          className="lg:hidden text-[#df9c16] focus:outline-none"
-        >
-          <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth={2}
-            viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (languageRef.current && !languageRef.current.contains(event.target as Node)) {
+        setShowLanguageDropdown(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setShowProfileDropdown(false);
+      }
+    }
 
-      {/* Overlay */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 bg-[#00000078] bg-opacity-40 z-40"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
-      {/* Slide-in Menu */}
-      <div
-        className={clsx(
-          "fixed top-0 right-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out",
-          menuOpen ? "translate-x-0" : "translate-x-full"
-        )}
-      >
-        <div className="flex items-center justify-between px-4 py-4 border-b">
-          <span className="font-semibold text-[#df9c16]">Menu</span>
-          <button onClick={() => setMenuOpen(false)} className="text-[#df9c16]">
-            ✕
-          </button>
-        </div>
-        <nav className="flex flex-col gap-4 p-4">
-          {navItems.map(({ name, href }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setMenuOpen(false)}
-              className={clsx(
-                'pb-1',
-                pathname === href
-                  ? 'text-[#df9c16] font-medium'
-                  : 'text-[#64748B] hover:text-[#df9c16]'
-              )}
-            >
-              {name}
-            </Link>
-          ))}
-          <button
-            onClick={() => {
-              localStorage.removeItem('auth');
-              location.href = '/resize_image/login';
-            }}
-            className="bg-red-600 text-white px-4 py-2 mt-4"
-          >
-            Logout
-          </button>
-        </nav>
-      </div>
+  // Replace with your actual logo
+  const Logo = () => (
+    <div className="flex items-center gap-3">
+      <Slack strokeWidth={1}className='text-green-500' /> 
+      <span>
+        <div className='text-green-500'>Video editing system</div>
+      </span>
     </div>
+  );
+
+  const languages = [
+    { code: 'en', name: 'English' },
+    { code: 'km', name: 'ភាសាខ្មែរ' },
+    { code: 'zh', name: '中文' }
+  ];
+  const [currentLanguage, setCurrentLanguage] = useState(languages[0]);
+
+  return (
+    <nav className="px-4 py-3 flex items-center justify-between">
+      {/* Left side - Logo */}
+      <div className="flex items-center">
+        <Logo />
+      </div>
+
+      {/* Right side - Navigation items */}
+      <div className="flex items-center space-x-4">
+        {/* Language Selector */}
+        <div className="relative" ref={languageRef}>
+          <button
+            onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
+            className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 transition-colors duration-200"
+          >
+            <Globe size={18} />
+            <span className="text-sm">{currentLanguage.code.toUpperCase()}</span>
+            <ChevronDown size={16} className={`transition-transform duration-200 ${showLanguageDropdown ? 'rotate-180' : ''}`} />
+          </button>
+
+          {/* Animated Language Dropdown */}
+          <div className={`absolute right-0 mt-2 w-40 bg-white  shadow-lg py-1 z-10 transition-all duration-200 ease-out ${showLanguageDropdown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1 pointer-events-none'}`}>
+            {languages.map((lang) => (
+              <button
+                key={lang.code}
+                onClick={() => {
+                  setCurrentLanguage(lang);
+                  setShowLanguageDropdown(false);
+                }}
+                className={`block w-full text-left px-4 py-2 text-sm transition-colors duration-100 ${currentLanguage.code === lang.code ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-100'}`}
+              >
+                {lang.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Profile & Logout */}
+        <div className="relative" ref={profileRef}>
+          <button
+            onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+            className="flex items-center space-x-1 transition-colors duration-200"
+          >
+            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center transition-all duration-200 hover:bg-gray-300">
+              <User size={16} className="text-gray-600" />
+            </div>
+          </button>
+
+          {/* Animated Profile Dropdown */}
+          <div className={`absolute right-0 mt-2 w-48 bg-white  shadow-lg py-1 z-10 transition-all duration-200 ease-out ${showProfileDropdown ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1 pointer-events-none'}`}>
+            <div className="px-4 py-2 text-sm text-gray-700 border-b transition-colors duration-100">
+              <div className="font-medium">User Name</div>
+              <div className="text-gray-500 text-xs">user@example.com</div>
+            </div>
+            <button
+              onClick={() => {
+                localStorage.removeItem('auth');
+                console.log('Logged out');
+                setShowProfileDropdown(false);
+                window.location.href = '/login';
+              }}
+              className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-100"
+            >
+              <LogOut size={16} className="mr-2" />
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Animation styles */}
+      <style jsx global>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOut {
+          from { opacity: 1; transform: translateY(0); }
+          to { opacity: 0; transform: translateY(-5px); }
+        }
+      `}</style>
+    </nav>
   );
 }

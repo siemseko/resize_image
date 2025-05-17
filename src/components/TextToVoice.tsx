@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useRef } from 'react';
 
 const TextToVoiceHighlight: React.FC = () => {
@@ -57,47 +56,48 @@ const TextToVoiceHighlight: React.FC = () => {
   };
 
   return (
-    <div
-      style={{ maxWidth: 500, margin: '2rem auto', textAlign: 'center', fontFamily: 'sans-serif' }}
-      className='bg-[#1c1c1c] rounded-[8px]'
-    >
-      <h2>Text to Voice with Word Highlight</h2>
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Text to Voice with Word Highlight</h2>
+      
       <textarea
         rows={5}
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Enter text here"
-        style={{ width: '100%', padding: '0.5rem', fontSize: '1rem' }}
+        className="w-full p-3 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-colors"
         disabled={speaking}
-        className='outline-none bg-[#1c1c1c] rounded-[8px] black-scrollbar'
       />
-      <button
-        onClick={handleSpeak}
-        style={{ marginTop: '1rem', padding: '0.5rem 1rem' }}
-      >
-        {speaking ? 'Stop' : 'Speak'}
-      </button>
+      
+      <div className="flex justify-center mt-4">
+        <button
+          onClick={handleSpeak}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            speaking 
+              ? 'bg-red-500 hover:bg-red-600 text-white' 
+              : 'bg-green-500 hover:bg-green-600 text-white'
+          }`}
+        >
+          {speaking ? 'Stop' : 'Speak'}
+        </button>
+      </div>
 
-      <p
-        style={{ marginTop: '2rem', fontSize: '1.2rem', lineHeight: '1.5' }}
-      >
-        {words.map((word, idx) => (
-          <span
-            key={idx}
-            style={{
-              backgroundColor: idx === currentWordIndex ? 'yellow' : 'transparent',
-              cursor: 'default',
-              transition: 'background-color 0.3s ease',
-              marginRight: '0.25rem',
-              padding: '0 2px',
-              borderRadius: '3px',
-            }}
-            title={idx === currentWordIndex ? 'Speaking...' : ''}
-          >
-            {word}
-          </span>
-        ))}
-      </p>
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+        <p className="text-gray-700 leading-relaxed">
+          {words.map((word, idx) => (
+            <span
+              key={idx}
+              className={`inline-block mr-1 px-1 rounded transition-colors ${
+                idx === currentWordIndex 
+                  ? 'bg-yellow-200 text-gray-900' 
+                  : 'text-gray-700'
+              }`}
+              title={idx === currentWordIndex ? 'Speaking...' : ''}
+            >
+              {word}
+            </span>
+          ))}
+        </p>
+      </div>
     </div>
   );
 };
